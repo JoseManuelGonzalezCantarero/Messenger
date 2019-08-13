@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class ImagePostControllerTest extends WebTestCase
 {
@@ -20,6 +21,10 @@ class ImagePostControllerTest extends WebTestCase
             'file' => $uploadedFile
         ]);
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
+
+        /** @var InMemoryTransport $transport */
+        $transport = self::$container->get('messenger.transport.async_priority_high');
+        $this->assertCount(1, $transport->get());
     }
 }
